@@ -23,3 +23,11 @@ Route::get('/pizzas', 'PizzaController@index');
 
 Route::get('/pizzas/{id}', 'PizzaController@show');
 
+//rest
+
+Route::resource('rest', 'RestTestController')->names('restTest');
+
+Route::group(['namespace' => 'Blog', 'prefix' => 'blog'], function(){
+    Route::resource('posts', 'PostController')->names('blog.posts');
+});
+
