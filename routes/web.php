@@ -38,7 +38,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //Админка Блога
 $groupData = [
-    'namespase' => 'Blog\Admin',
+    'namespace' => 'Blog\Admin',
     'prefix'    => 'admin/blog',
 ];
 Route::group($groupData, function () {
