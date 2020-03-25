@@ -25,7 +25,7 @@ Route::get('/pizzas/{id}', 'PizzaController@show');
 
 //rest
 
-Route::resource('rest', 'RestTestController')->names('restTest');
+// Route::resource('rest', 'RestTestController')->names('restTest');
 
 Route::group(['namespace' => 'Blog', 'prefix' => 'blog'], function(){
     Route::resource('posts', 'PostController')->names('blog.posts');
@@ -35,3 +35,16 @@ Route::group(['namespace' => 'Blog', 'prefix' => 'blog'], function(){
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+//Админка Блога
+$groupData = [
+    'namespase' => 'Blog\Admin',
+    'prefix'    => 'admin/blog',
+];
+Route::group($groupData, function () {
+  //BlogCategory
+  $methods = ['index', 'edit', 'update', 'create', 'store',];
+  Route:: resource('categories', 'CategoryController')
+     ->only($methods)
+     ->names('blog.admin.categories');
+});
