@@ -1,40 +1,46 @@
 @extends('layouts.layout')
 
 @section('content')
+<style>
+
+  .pag{
+    margin-top: 100px;
+  }
+  .card{
+    margin: 10px;
+  }
+</style>
 <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-12">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-            <li class="page-item"><a class="page-link" href="{{ route('blog.admin.categories.create') }}">Add</a></li>
-            </ul>
-        </nav>
-           <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
-
+  <div class="row justify-content-center">
+    
             @foreach ($paginator as $item)
-
-           <div class="card-header" id="card"># : {{ $item->id }}</div>
-            <div class="card-body">
-              <h5 @if (in_array($item->parent_id, [0, 1])) style="color:grey" @endif>{{ $item->parent_id }}</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </div> 
-            <br>
-
+            <div class="card mb-3" style="max-width: 540px;">
+              <div class="row no-gutters">
+                {{-- <div class="col-md-4">
+                  <img src="..." class="card-img" alt="...">
+                </div> --}}
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title"># : {{ $item->id }}</h5>
+                    <p class="card-text" @if (in_array($item->parent_id, [0, 1])) style="color:red" @endif>Parent_id : {{ $item->parent_id }}</p>
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
             @endforeach
-          
-          </div>
-        </div>
-    </div>
+
+  </div>
     @if($paginator->total() > $paginator->count())
-    <br>
     <div class="container">
       <div class="row justify-content-center">
-        <div>
+        <div class="pag">
           {{ $paginator->Links() }}
         </div>
       </div>
-    </div>
-    
-  @endif
+    </div>    
+    @endif
+
+    <a class="btn btn-primary btn-lg btn-block" href="{{ route('blog.admin.categories.create') }}" style="margin-top:10px" role="button">Add</a>
 </div>
 @endsection
