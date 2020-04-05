@@ -16,7 +16,7 @@ class CategoryController extends BaseController
     {
         // $dsd = BlogCategory::all();
         // dd($dsd);
-        $paginator = BlogCategory::paginate(5);
+        $paginator = BlogCategory::paginate(6);
         return view('blog.admin.category.index', compact('paginator'));
     }
 
@@ -49,7 +49,7 @@ class CategoryController extends BaseController
      */
     public function show($id)
     {
-        //
+        dd(__METHOD__);
     }
 
     /**
@@ -60,7 +60,11 @@ class CategoryController extends BaseController
      */
     public function edit($id)
     {
-        //
+        $item = BlogCategory::findOrFail($id);
+        $categoryList = BlogCategory::all();
+
+        return view('blog.admin.category.edit',
+        compact('item', 'categoryList'));
     }
 
     /**
@@ -72,7 +76,7 @@ class CategoryController extends BaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        dd(__METHOD__, $request->all(), $id);
     }
 
     /**
