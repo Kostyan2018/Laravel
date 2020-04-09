@@ -55,7 +55,7 @@
                         <textarea name="description" style="resize: none"  
                         id="description" 
                         class="form-control"
-                        rows="4">{{ $item->slug }}</textarea>
+                        rows="4">{{ old('description'), $item->description }}</textarea>
                         </div>
 
                     </div>
