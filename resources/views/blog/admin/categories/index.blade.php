@@ -3,16 +3,11 @@
 @section('content')
 <style>
 
-  /* .pag{
-    margin-top: 100px;
-  } */
   .card{
     margin: 10px;
     min-width: 450px;
   }
-  /* .container{
-    height: 50vh;
-  } */
+
 </style>
 <div class="container">
   
