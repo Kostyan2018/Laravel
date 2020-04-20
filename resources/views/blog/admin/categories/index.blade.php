@@ -9,10 +9,12 @@
   }
 
 </style>
+
+  <div>
+    <a class="btn btn-primary btn-lg btn-block" href="{{ route('blog.admin.categories.create') }}" role="button">Add</a>
+  </div>
 <div class="container">
-  
   <div class="row justify-content-center">
-    
             @foreach ($paginator as $item)
             <div class="card">
               <h5 class="card-header">№ : {{ $item->id }}</h5>
@@ -36,5 +38,9 @@
       </div>
     </div>    
     @endif
-</div><a class="btn btn-primary btn-lg btn-block" href="{{ route('blog.admin.categories.create') }}" role="button">Add</a>
+</div>
+<div>
+  <a class="btn btn-primary btn-lg btn-block" href="{{ route('blog.admin.categories.create') }}" role="button">Add</a>
+</div>
+
 @endsection

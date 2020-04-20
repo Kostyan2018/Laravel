@@ -5,9 +5,14 @@
        /** @var \App\Models\BloCategory $item */
     @endphp
 
-<form action="{{ route('blog.admin.categories.update', $item->id) }}" method="post">
+@if ($item->exists)
+    <form action="{{ route('blog.admin.categories.update', $item->id) }}" method="post">
     @method('PATCH')
+@else
+    <form action="{{ route('blog.admin.categories.store') }}" method="post">   
+@endif    
     @csrf
+
     <div class="container">
         @php
            /** @var \Illuminate\Support\ViewErrorBag $errors */ 

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
+use App\Http\Requests\BlogCategoryCreateRequest;
 use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
-
+use function GuzzleHttp\Promise\all;
 
 class CategoryController extends BaseController
 {
@@ -30,7 +32,12 @@ class CategoryController extends BaseController
      */
     public function create()
     {
-      //
+      $item = new BlogCategory();
+      $categoryList = BlogCategory::all();
+
+      return view('blog.admin.categories.edit',
+        compact('item', 'categoryList'));
+
     }
 
     /**
@@ -39,9 +46,28 @@ class CategoryController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BlogCategoryCreateRequest $request)
     {
-        //
+       $data = $request->input();
+       if(empty($data['slug'])){
+           $data['slug'] = Str::slug($data['title']);
+       }
+       
+
+       //Створює об'єкт але не додає його в БД
+       $item = new BlogCategory($data);
+       $item->save();
+       
+    //    Створює об'єкт та додає його в БД
+    //    $item = (new BlogCategory())->create($data);
+
+       if($item instanceof BlogCategory) {
+           return redirect()->route('blog.admin.categories.edit', [$item->id])
+           ->with(['success' => 'Успішно збережено']);
+       } else {
+          return back()->withErrors(['msg' => 'Помилка збереження'])
+          ->withInput();
+       }
     }
 
     /**
@@ -79,8 +105,6 @@ class CategoryController extends BaseController
      */
     public function update(BlogCategoryUpdateRequest $request, $id)
     {
-
-
         $item = BlogCategory::find($id);
         if (empty($item)) {
             return back()
@@ -89,9 +113,15 @@ class CategoryController extends BaseController
         }
 
         $data = $request->all();
-        $result = $item
-        ->fill($data)
-        ->save();
+        if(empty($data['slug'])){
+            $data['slug'] = Str::slug($data['title']);
+        }
+        $result = $item->update($data);  
+        
+        // long variant:
+        // $result = $item
+        // ->fill($data)
+        // ->save();
         
         if($result) {
             return redirect()
