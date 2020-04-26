@@ -4,24 +4,36 @@ namespace App\Http\Controllers\Blog\Admin;
 
 use App\Http\Requests\BlogCategoryCreateRequest;
 use App\Http\Requests\BlogCategoryUpdateRequest;
+use Illuminate\Http\Response;
 use App\Models\BlogCategory;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Repositories\BlogCategoryRepository;
 
-use function GuzzleHttp\Promise\all;
+/** @package App\Http\Controller\Blog\Admin  */
 
 class CategoryController extends BaseController
 {
     /**
+     * @var BlogcategoryRepository
+     */
+    private $blogCategoryRepository;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->blogCategoryRepository = app(BlogCategoryRepository::class);
+    }
+        
+     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        // $dsd = BlogCategory::all();
-        // dd($dsd);
-        $paginator = BlogCategory::paginate(6);
+        // $paginator = BlogCategory::paginate(6);
+        $paginator = $this->blogCategoryRepository->getAllWithPaginate(5);
+
         return view('blog.admin.categories.index', compact('paginator'));
     }
 
@@ -85,12 +97,21 @@ class CategoryController extends BaseController
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
+     * @param BlogCategoryRepository $categoryRepository
+     * 
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        $item = BlogCategory::findOrFail($id);
-        $categoryList = BlogCategory::all();
+    public function edit($id, BlogCategoryRepository $categoryRepository)
+    {       
+        // $item = BlogCategory::findOrFail($id);
+        // $categoryList = BlogCategory::all();
+
+         //$categoryRepository = new BlogCategoryRepository();
+        $item = $categoryRepository->getEdit($id);
+        if(empty($item)){
+            abort(404);
+        }        
+        $categoryList = $categoryRepository->getForComboBox();
 
         return view('blog.admin.categories.edit',
         compact('item', 'categoryList'));
@@ -117,7 +138,7 @@ class CategoryController extends BaseController
             $data['slug'] = Str::slug($data['title']);
         }
         $result = $item->update($data);  
-        
+
         // long variant:
         // $result = $item
         // ->fill($data)
