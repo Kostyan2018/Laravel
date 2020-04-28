@@ -23,7 +23,7 @@ class CategoryController extends BaseController
         parent::__construct();
         $this->blogCategoryRepository = app(BlogCategoryRepository::class);
     }
-        
+
      /**
      * Display a listing of the resource.
      *
@@ -45,7 +45,8 @@ class CategoryController extends BaseController
     public function create()
     {
       $item = new BlogCategory();
-      $categoryList = BlogCategory::all();
+    //   $categoryList = BlogCategory::all();
+      $categoryList = $this->blogCategoryRepository->getForComboBox();
 
       return view('blog.admin.categories.edit',
         compact('item', 'categoryList'));
@@ -101,17 +102,17 @@ class CategoryController extends BaseController
      * 
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, BlogCategoryRepository $categoryRepository)
+    public function edit($id)
     {       
         // $item = BlogCategory::findOrFail($id);
         // $categoryList = BlogCategory::all();
 
          //$categoryRepository = new BlogCategoryRepository();
-        $item = $categoryRepository->getEdit($id);
+        $item = $this->blogCategoryRepository->getEdit($id);
         if(empty($item)){
             abort(404);
         }        
-        $categoryList = $categoryRepository->getForComboBox();
+        $categoryList = $this->blogCategoryRepository->getForComboBox();
 
         return view('blog.admin.categories.edit',
         compact('item', 'categoryList'));
@@ -126,7 +127,8 @@ class CategoryController extends BaseController
      */
     public function update(BlogCategoryUpdateRequest $request, $id)
     {
-        $item = BlogCategory::find($id);
+        $item = $this->blogCategoryRepository->getEdit($id);
+        
         if (empty($item)) {
             return back()
             ->withErrors(['msg' => "Запис №=[{$id}] не знайдений"])
